@@ -1,0 +1,103 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        max-age: 2592000
+
+spring:
+  application:
+    name: yu-picture-backend
+
+  # ===== 数据库配置（使用 docker-compose 默认值无需修改）=====
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yu_picture?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+  # ===== Redis 配置（使用 docker-compose 默认值无需修改）=====
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+
+  # ===== Spring Session 存储到 Redis =====
+  session:
+    store-type: redis
+    timeout: 2592000
+
+  # ===== 文件上传大小限制 =====
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  # ===== ShardingSphere 分库分表配置 =====
+  shardingsphere:
+    datasource:
+      names: yu_picture
+      yu_picture:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/yu_picture?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 123456
+    rules:
+      sharding:
+        tables:
+          picture:
+            actual-data-nodes: yu_picture.picture
+            table-strategy:
+              standard:
+                sharding-column: spaceId
+                sharding-algorithm-name: picture_sharding_algorithm
+        sharding-algorithms:
+          picture_sharding_algorithm:
+            type: CLASS_BASED
+            props:
+              strategy: standard
+              algorithmClassName: com.yupi.yupicturebackend.manager.sharding.PictureShardingAlgorithm
+    props:
+      sql-show: true
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    enable-sql-runner: true
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+knife4j:
+  enable: true
+  openapi:
+    title: 接口文档（开发环境）
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - com.yupi.yupicturebackend.controller
+
+# ===== 腾讯云 COS 对象存储（必填，否则图片上传功能不可用）=====
+# 请前往 https://console.cloud.tencent.com/cam/capi 获取密钥
+# Bucket 名称示例：my-bucket-1234567890（格式：bucketname-appid）
+# 访问域名格式：https://<BucketName-APPID>.cos.<Region>.myqcloud.com
+cos:
+  client:
+    host: https://your-bucket-1234567890.cos.ap-guangzhou.myqcloud.com  # 替换为你的 Bucket 访问域名（与下方 bucket/region 保持一致）
+    secretId: YOUR_COS_SECRET_ID      # 替换为你的 SecretId
+    secretKey: YOUR_COS_SECRET_KEY    # 替换为你的 SecretKey
+    region: ap-guangzhou              # 替换为你的 Bucket 所在地域，例如 ap-shanghai
+    bucket: your-bucket-1234567890    # 替换为你的 Bucket 名称（格式：bucketname-appid）
+
+# ===== 阿里云 AI 扩图（可选，不填则 AI 扩图接口不可用）=====
+# 请前往 https://bailian.console.aliyun.com/ 开通并获取 API Key
+#aliYunAi:
+#  apiKey: YOUR_ALIYUN_AI_API_KEY

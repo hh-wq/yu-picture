@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: yu_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: yu_picture
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - yu_mysql_data:/var/lib/mysql
+      # 自动执行初始化 SQL（仅在 volume 首次创建时运行，已有数据不会重复执行）
+      # 如需重新初始化，先执行 docker compose down -v 删除卷，再重新 up
+      - ./yu-picture-backend/sql/create_table.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: yu_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - yu_redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  yu_mysql_data:
+    driver: local
+  yu_redis_data:
+    driver: local
