@@ -13,7 +13,8 @@ services:
       - "3306:3306"
     volumes:
       - yu_mysql_data:/var/lib/mysql
-      # 自动执行初始化 SQL（容器首次启动时运行）
+      # 自动执行初始化 SQL（仅在 volume 首次创建时运行，已有数据不会重复执行）
+      # 如需重新初始化，先执行 docker compose down -v 删除卷，再重新 up
       - ./yu-picture-backend/sql/create_table.sql:/docker-entrypoint-initdb.d/init.sql:ro
     command:
       - --character-set-server=utf8mb4

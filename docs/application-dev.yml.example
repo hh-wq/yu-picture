@@ -87,14 +87,15 @@ knife4j:
 
 # ===== 腾讯云 COS 对象存储（必填，否则图片上传功能不可用）=====
 # 请前往 https://console.cloud.tencent.com/cam/capi 获取密钥
-# Bucket 格式：bucketname-appid，例如：my-bucket-1234567890
+# Bucket 名称示例：my-bucket-1234567890（格式：bucketname-appid）
+# 访问域名格式：https://<BucketName-APPID>.cos.<Region>.myqcloud.com
 cos:
   client:
-    host: https://your-bucket-name.cos.ap-guangzhou.myqcloud.com  # 替换为你的 Bucket 访问域名
+    host: https://your-bucket-1234567890.cos.ap-guangzhou.myqcloud.com  # 替换为你的 Bucket 访问域名（与下方 bucket/region 保持一致）
     secretId: YOUR_COS_SECRET_ID      # 替换为你的 SecretId
     secretKey: YOUR_COS_SECRET_KEY    # 替换为你的 SecretKey
-    region: ap-guangzhou              # 替换为你的 Bucket 所在地域
-    bucket: your-bucket-name         # 替换为你的 Bucket 名称（不含 appid）
+    region: ap-guangzhou              # 替换为你的 Bucket 所在地域，例如 ap-shanghai
+    bucket: your-bucket-1234567890    # 替换为你的 Bucket 名称（格式：bucketname-appid）
 
 # ===== 阿里云 AI 扩图（可选，不填则 AI 扩图接口不可用）=====
 # 请前往 https://bailian.console.aliyun.com/ 开通并获取 API Key

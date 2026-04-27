@@ -60,9 +60,9 @@ docker ps
 # 进入 MySQL 容器
 docker exec -it yu_mysql mysql -uroot -p123456
 
-# 在 MySQL shell 中执行
-source /path/to/yu-picture-backend/sql/create_table.sql
-# 或者用 IDEA 的 Database 工具、Navicat 等直接运行 SQL 文件
+# 在 MySQL shell 中执行（把路径替换为你实际的项目目录，例如：）
+# source C:/projects/yu-picture/yu-picture-backend/sql/create_table.sql
+# 或者直接用 IDEA 的 Database 工具、Navicat 等打开并运行该 SQL 文件（推荐）
 ```
 
 > **注意**：`create_table.sql` 包含多条 `ALTER TABLE` 语句，请**完整执行**，否则缺少列会导致启动后接口报错。

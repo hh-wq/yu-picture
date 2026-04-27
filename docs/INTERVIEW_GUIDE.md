@@ -90,14 +90,14 @@ com.yupi.yupicture
 - 抽象基类：`manager/upload/PictureUploadTemplate.java`
 - 文件上传实现：`manager/upload/FilePictureUpload.java`
 - URL 上传实现：`manager/upload/UrlPictureUpload.java`
-- 调用处：`service/impl/PictureServiceImpl.java`（根据 `inputSource` 类型自动选择策略）
+- 调用处：`service/impl/PictureServiceImpl.java`（根据 `inputSource` 类型自动选择策略，约第 168 行）
 
 **设计权衡**
 
 上传来源有"本地文件"和"URL 抓取"两种，二者共享"校验 → 生成路径 → 上传 COS → 获取元数据 → 清理临时文件"的主流程，但校验逻辑和文件预处理逻辑各自不同。模板方法将公共流程固定在父类，子类只覆写差异步骤（`validPicture`、`getOriginFilename`、`processFile`），做到**开闭原则**。
 
 ```java
-// PictureServiceImpl.java  ～ 170行
+// PictureServiceImpl.java  约第 168 行
 PictureUploadTemplate pictureUploadTemplate = filePictureUpload;
 if (inputSource instanceof String) {
     pictureUploadTemplate = urlPictureUpload;
