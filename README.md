@@ -6,6 +6,42 @@
 >
 > ⭐️ 加入项目系列学习：[加入编程导航](https://www.codefather.cn/vip)
 
+## 快速开始（本地运行）
+
+> 适用于 Windows + Docker Desktop 环境，Java 后端开发者快速上手。
+
+### 1. 启动依赖服务
+
+```cmd
+# 在仓库根目录执行（需要 Docker Desktop 已启动）
+docker compose up -d
+```
+
+### 2. 初始化数据库
+
+`docker-compose.yml` 已配置自动执行 `yu-picture-backend/sql/create_table.sql`，容器首次启动时会自动建表。也可手动执行该 SQL 文件。
+
+### 3. 复制并配置后端
+
+```cmd
+copy docs\application-dev.yml.example yu-picture-backend\src\main\resources\application-dev.yml
+```
+
+编辑 `application-dev.yml`，填入腾讯云 COS 的 `secretId`、`secretKey`、`bucket` 等信息。
+
+### 4. 启动后端
+
+用 IntelliJ IDEA 打开 `yu-picture-backend/` 目录，运行 `YuPictureBackendApplication`（添加 VM 参数 `-Dspring.profiles.active=dev`）。
+
+访问接口文档：`http://localhost:8123/api/doc.html`
+
+### 详细步骤与学习路径
+
+- 📖 [学习路径（Java 后端 · Windows）](docs/LEARNING_PATH.md)
+- 🎯 [面试亮点与项目介绍材料](docs/INTERVIEW_GUIDE.md)
+
+---
+
 ## 一分钟了解项目
 
 请观看项目介绍和上线教程视频：https://www.bilibili.com/video/BV1akwGeSERK
